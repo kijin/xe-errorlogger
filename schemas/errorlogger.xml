@@ -1,0 +1,11 @@
+<table name="errorlogger">
+    <column name="error_sequence" type="number" size="11" notnull="notnull" primary_key="primary_key" auto_increment="auto_increment" />
+    <column name="error_request_id" type="char" size="40" index="idx_error_request_id" />
+    <column name="error_type" type="varchar" size="40" index="idx_error_type" />
+    <column name="error_ipaddress" type="varchar" size="60" />
+    <column name="error_module" type="varchar" size="120" />
+    <column name="error_act" type="varchar" size="120" />
+    <column name="error_file" type="varchar" size="250" />
+    <column name="error_line" type="number" size="11" />
+    <column name="error_message" type="text" />
+</table>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+	<grants />
+	<permissions />
+	<actions>
+		<action name="dispErrorloggerAdminConfig" type="view" admin_index="true" menu_name="errorlogger" />
+		<action name="dispErrorloggerAdminList" type="view" />
+		<action name="procErrorloggerAdminInsertConfig" type="controller" />
+		<action name="procErrorloggerAdminClearList" type="controller" />
+	</actions>
+	<menus>
+		<menu name="errorlogger" type="all">
+			<title xml:lang="ko">에러 기록 모듈</title>
+			<title xml:lang="en">Error Logger</title>
+		</menu>
+	</menus>
+</module>

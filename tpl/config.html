@@ -1,0 +1,50 @@
+<include target="./header.html" />
+<?php $elconfig = Context::get('elconfig'); ?>
+
+<form class="x_form-horizontal" action="./" method="post">
+	<input type="hidden" name="module" value="errorlogger" />
+	<input type="hidden" name="act" value="procErrorloggerAdminInsertConfig" />
+	<input type="hidden" name="success_return_url" value="{getRequestUriByServerEnviroment()}" />
+	
+	<section class="section">
+	
+		<div class="x_control-group">
+			<label class="x_control-label">치명적인 오류</label>
+			<div class="x_controls">
+				<label for="error_type_fatal_Y" class="x_inline"><input type="radio" name="error_type_fatal" id="error_type_fatal_Y" value="Y" checked="checked"|cond="($elconfig->error_types & E_ERROR) != 0" /> 기록</label>
+				<label for="error_type_fatal_N" class="x_inline"><input type="radio" name="error_type_fatal" id="error_type_fatal_N" value="N" checked="checked"|cond="($elconfig->error_types & E_ERROR) == 0" /> 기록하지 않음</label>
+				<p class="x_help-block">문법 오류, 존재하지 않는 함수 호출 등의 치명적인 오류를 기록합니다.<br />
+					백지현상이 발생할 경우 이 옵션을 사용하면 도움이 됩니다.</p>
+			</div>
+		</div>
+		
+		<div class="x_control-group">
+			<label class="x_control-label">경고 (E_WARNING)</label>
+			<div class="x_controls">
+				<label for="error_type_warning_Y" class="x_inline"><input type="radio" name="error_type_warning" id="error_type_warning_Y" value="Y" checked="checked"|cond="($elconfig->error_types & E_WARNING) != 0" /> 기록</label>
+				<label for="error_type_warning_N" class="x_inline"><input type="radio" name="error_type_warning" id="error_type_warning_N" value="N" checked="checked"|cond="($elconfig->error_types & E_WARNING) == 0" /> 기록하지 않음</label>
+				<p class="x_help-block">퍼미션 문제, 쿼리 실패 등 중대한 오류를 기록합니다.<br />
+					대부분의 디버깅 작업에 도움이 됩니다.</p>
+			</div>
+		</div>
+		
+		<!--
+		<div class="x_control-group">
+			<label class="x_control-label">알림 (E_NOTICE)</label>
+			<div class="x_controls">
+				<label for="error_type_notice_Y" class="x_inline"><input type="radio" name="error_type_notice" id="error_type_notice_Y" value="Y" checked="checked"|cond="($elconfig->error_types & E_NOTICE) != 0" /> 기록</label>
+				<label for="error_type_notice_N" class="x_inline"><input type="radio" name="error_type_notice" id="error_type_notice_N" value="N" checked="checked"|cond="($elconfig->error_types & E_NOTICE) == 0" /> 기록하지 않음</label>
+				<p class="x_help-block">초기화되지 않은 변수 참조 등 사소한 오류를 기록합니다.<br />
+					이 옵션을 사용할 경우 대량의 에러 메시지가 기록되어 서버에 심한 부하가 걸릴 수 있습니다.<br />
+					꼭 필요할 때만 잠깐 사용하시고, 디버깅 후 반드시 꺼 주시기 바랍니다.</p>
+			</div>
+		</div>
+		-->
+		
+	</section>
+	
+	<div class="btnArea x_clearfix">
+		<button type="submit" class="x_btn x_btn-primary x_pull-right">{$lang->cmd_registration}</button>
+	</div>
+	
+</form>

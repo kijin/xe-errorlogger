@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<lang>
+	<item name="cmd_errorlogger">
+		<value xml:lang="ko"><![CDATA[에러 기록 모듈]]></value>
+		<value xml:lang="en"><![CDATA[Error Logger]]></value>
+	</item>
+</lang>

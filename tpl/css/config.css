@@ -1,0 +1,73 @@
+
+span.fatal_error {
+	color: #e00;
+	font-weight: bold;
+}
+
+span.warning {
+	color: #cc9900;
+}
+
+span.other_error {
+	color: #666666;
+}
+
+tr.toggle_hidden {
+	display: none;
+}
+
+tr.toggle_hidden td {
+	background: #fff !important;
+}
+
+td.error_log_entry {
+	padding-left: 24px !important;
+}
+
+div.error_message_source {
+	padding: 8px 0 4px 0;
+	font-family: "Segoe UI", Arial, sans-serif;
+}
+
+div.error_message_source div.error_message_content {
+	font-size: 16px;
+	font-weight: bold;
+	padding-bottom: 4px;
+}
+
+div.error_message_source div.error_message_file {
+	font-size: 11px;
+	color: #666;
+	padding-top: 4px;
+}
+
+div.error_log_source {
+	margin: 12px 0;
+	padding: 1px;
+	border: 1px solid #ccc;
+	font: 13px/150% Consolas, "Courier New", "DotumChe", sans-serif;
+}
+
+div.error_log_source_line {
+	padding-left: 56px;
+	position: relative;
+}
+
+div.error_log_source_line.selected {
+	background-color: #ffdddd;
+}
+
+div.error_log_source_line_number {
+	position: absolute;
+	left: 0; top: 0;
+	width: 40px; height: 100%;
+	padding-right: 8px;
+	color: #666;
+	text-align: right;
+	background: #f4f4f4;
+}
+
+div.error_log_source_line.selected div.error_log_source_line_number {
+	background: #cc0000;
+	color: #ffff66;
+}

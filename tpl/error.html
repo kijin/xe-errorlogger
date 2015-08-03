@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="Generator" content="XpressEngine">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>OOPS!</title>
+	<style>
+		
+		#oops {
+			width: 400px;
+			margin: 30px auto;
+			background-color: #f9f9f9;
+			border: 1px solid #d8d8d8;
+			box-shadow: 0 2px 3px #eee;
+		}
+		
+		#oops_content {
+			padding: 30px 30px 24px;
+		}
+		
+		#oops_content h1 {
+			margin: 0 0 30px 0;
+			font: normal 40px/50px "Segoe UI", "NanumGothic", Arial, sans-serif;
+		}
+		
+		#oops_content p {
+			margin: 10px 0;
+			font: normal 16px/28px "Segoe UI", "NanumGothic", Arial, sans-serif;
+			color:#f44336;
+		}
+		
+		@media all and (max-width: 480px) {
+		    #oops {
+		    	width: 300px;
+		    	margin: 0 auto;
+		    }
+		}
+		
+	</style>
+</head>
+<body>
+<div id="oops">
+	<div id="oops_content">
+		<h1>OOPS!</h1>
+		<p>Fatal Error: <?php echo htmlspecialchars($errinfo['message']); ?></p>
+	</div>
+</div>
+</body>
+</html>

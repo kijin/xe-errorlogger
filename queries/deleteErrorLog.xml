@@ -1,0 +1,8 @@
+<query id="deleteErrorLog" action="delete">
+    <tables>
+        <table name="errorlogger" />
+    </tables>
+    <conditions>
+        <condition operation="less" column="error_request_id" var="threshold" />
+    </conditions>
+</query>

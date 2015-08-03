@@ -1,0 +1,110 @@
+<include target="./header.html" />
+<?php $elconfig = Context::get('elconfig'); ?>
+<?php $elcount = Context::get('elcount'); ?>
+<?php $ellog = Context::get('ellog'); ?>
+
+<table id="error_log_table" class="x_table x_table-striped x_table-hover">
+	<caption>
+		<strong>Total: {number_format($paging->total_count)}, Page: {number_format($page)}/{number_format($paging->total_page)}</strong>
+	</caption>
+	<thead>
+		<tr>
+			<th scope="col" class="nowr">시간</th>
+			<th scope="col" class="nowr">구분</th>
+			<th scope="col" class="nowr">module / act</th>
+			<th scope="col" class="nowr">에러 발생 파일</th>
+		</tr>
+	</thead>
+	<tbody>
+		{@ $previous_request_id = null}
+		<!--@foreach($ellog as $elitem)-->
+		<tr>
+			<td>
+				<!--@if($elitem->error_request_id === $previous_request_id)-->
+					<div style="text-align:center;margin-right:16px">&#12291;</div>
+				<!--@else-->
+					{vsprintf('%s%s-%s-%s %s:%s:%s', str_split(substr($elitem->error_request_id, 0, 14), 2))}
+				<!--@end-->
+				{@ $previous_request_id = $elitem->error_request_id}
+			</td>
+			<td>
+				<!--@if(strpos($elitem->error_type, 'Fatal') !== false)-->
+					<span class="fatal_error">{$elitem->error_type}</span>
+				<!--@elseif(strpos($elitem->error_type, 'Warning') !== false)-->
+					<span class="warning">{$elitem->error_type}</span>
+				<!--@else-->
+					<span class="other_error">{$elitem->error_type}</span>
+				<!--@end-->
+			</td>
+			<td>{$elitem->error_module} / {$elitem->error_act}</td>
+			<td>
+				<a href="#" class="toggle_link" title="{htmlspecialchars($elitem->error_message)}">
+				<!--@if(!strncasecmp($elitem->error_file, _XE_PATH_, strlen(_XE_PATH_)))-->
+					./{htmlspecialchars(substr($elitem->error_file, strlen(_XE_PATH_)))}
+				<!--@else-->
+					{htmlspecialchars($elitem->error_file)}
+				<!--@end-->
+				: {$elitem->error_line}</a>
+			</td>
+		</tr>
+		<tr class="toggle_hidden">
+			<td class="error_log_entry" colspan="4">
+				<div class="error_message_source">
+					<div class="error_message_content">{nl2br(htmlspecialchars($elitem->error_message))}</div>
+					<div class="error_message_file">{htmlspecialchars($elitem->error_file)} : {$elitem->error_line}</div>
+				</div>
+				<!--@if(preg_match("/^(.+)\(([0-9]+)\) : eval\(\)'d code/", $elitem->error_file, $matches))-->
+					{@ $elitem->error_file = $matches[1]}
+					{@ $elitem->error_line = $matches[2]}
+				<!--@end-->
+				<!--@if(file_exists($elitem->error_file) && is_readable($elitem->error_file))-->
+					{@ $lines = @file($elitem->error_file)}
+					{@ $lines = $lines ? $lines : array()}
+					{@ $end_line = min(count($lines), $elitem->error_line + 7)}
+					{@ $start_line = max(1, $end_line - 14)}
+					{@ $lines = array_slice($lines, $start_line - 1, $end_line - $start_line + 1)}
+					<!--@if(count($lines))-->
+					<div class="error_log_source">
+						<!--@foreach($lines as $line_number => $line_content)-->
+							<div class="error_log_source_line <!--@if($line_number + $start_line == $elitem->error_line)-->selected<!--@end-->">
+								<div class="error_log_source_line_number">{$line_number + $start_line}</div>
+								{str_replace(array("\t", ' '), array('    ', '&nbsp;'), htmlspecialchars($line_content))}&nbsp;
+							</div>
+						<!--@end-->
+					</div>
+					<!--@end-->
+				<!--@end-->
+			</td>
+		</tr>
+		<!--@end-->
+		<tr cond="!count($ellog)">
+			<td>기록된 에러가 없습니다.</td>
+		</tr>
+	</tbody>
+</table>
+
+<div class="x_clearfix">
+	<form class="x_pagination x_pull-left" style="margin-top:8px" action="{Context::getUrl('')}" method="post" no-error-return-url="true">
+		<input loop="$param => $key, $val" cond="!in_array($key, array('mid', 'vid', 'act'))" type="hidden" name="{$key}" value="{$val}" />
+		<ul>
+			<li class="x_disabled"|cond="$page == 1"><a href="{getUrl('page', '')}">&laquo; {$lang->first_page}</a></li>
+			<!--@while($page_no = $paging->page_navigation->getNextPage())-->
+				<li class="x_active"|cond="$page_no == $page"><a href="{getUrl('page', $page_no)}">{$page_no}</a></li>
+			<!--@end-->
+			<li class="x_disabled"|cond="$page == $paging->page_navigation->last_page"><a href="{getUrl('page', $paging->page_navigation->last_page)}">{$lang->last_page} &raquo;</a></li>
+		</ul>
+	</form>
+	<form class="x_pull-right x_input-append" style="margin-top:8px" action="{Context::getUrl('')}" method="post">
+		<input type="hidden" name="module" value="admin" />
+		<input type="hidden" name="act" value="procErrorloggerAdminClearList" />
+		<select name="clear_threshold" style="width:180px">
+			<option value="0">모든 기록</option>
+			<option value="1" selected="selected">1일 이상 지난 기록</option>
+			<option value="3">3일 이상 지난 기록</option>
+			<option value="7">7일 이상 지난 기록</option>
+			<option value="15">15일 이상 지난 기록</option>
+			<option value="30">30일 이상 지난 기록</option>
+		</select>
+		<button class="x_btn" type="submit" disabled="disabled"|cond="!count($ellog)">삭제</button>
+	</form>
+</div>

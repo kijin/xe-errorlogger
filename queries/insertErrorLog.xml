@@ -1,0 +1,15 @@
+<query id="insertErrorLog" action="insert">
+    <tables>
+        <table name="errorlogger" />
+    </tables>
+    <columns>
+        <column name="error_request_id" var="error_request_id" notnull="notnull" />
+        <column name="error_type" var="error_type" />
+        <column name="error_ipaddress" var="error_ipaddress" />
+        <column name="error_module" var="error_module" />
+        <column name="error_act" var="error_act" />
+        <column name="error_file" var="error_file" />
+        <column name="error_line" var="error_line" />
+        <column name="error_message" var="error_message" />
+    </columns>
+</query>
