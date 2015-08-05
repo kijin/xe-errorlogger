@@ -51,12 +51,18 @@ class ErrorLogger extends ModuleObject
 		}
 	}
 	
+	/**
+	 * 설치 메소드.
+	 */
 	public function moduleInstall()
 	{
 		$this->registerTriggers();
 		return new Object();
 	}
 	
+	/**
+	 * 업데이트 확인 메소드.
+	 */
 	public function checkUpdate()
 	{
 		$oModuleModel = getModel('module');
@@ -67,12 +73,18 @@ class ErrorLogger extends ModuleObject
 		return false;
 	}
 	
+	/**
+	 * 업데이트 메소드.
+	 */
 	public function moduleUpdate()
 	{
 		$this->registerTriggers();
 		return new Object(0, 'success_updated');
 	}
 	
+	/**
+	 * 캐시 재생성 메소드.
+	 */
 	public function recompileCache()
 	{
 		$oAdminController = getAdminController('errorlogger');
