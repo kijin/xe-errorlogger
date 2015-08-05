@@ -84,67 +84,79 @@ class ErrorLoggerModel extends ErrorLogger
 	/**
 	 * 일반 에러 핸들러.
 	 */
-    public function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
-    {
-    	// 기록할 필요가 없는 에러는 무시한다.
-    	if (($errno & self::$config->error_types) == 0 || error_reporting() == 0)
-    	{
-    		return false;
-    	}
-    	
-    	// 에러를 기록한다.
-    	set_error_handler(array($this, 'dummyHandler'), ~0);
-        $this->logErrorToDB($errno, $errfile, $errline, $errstr);
-        restore_error_handler();
-        
-        // 기본 에러 핸들러의 작동을 방해하지 않도록 false를 반환한다.
-        return false;
-    }
-    
-    /**
-     * 치명적인 오류로 실행이 종료되는 경우를 기록하는 메소드.
-     */
-    public function shutdownHandler()
-    {
-        // 정상 종료되는 경우는 무시한다.
-        $errinfo = error_get_last();
-        if ($errinfo === null || ($errinfo['type'] != 1 && $errinfo['type'] != 4))
-        {
-        	return false;
-        }
-        
-        // 에러를 기록한다.
-    	set_error_handler(array($this, 'dummyHandler'), ~0);
-        $this->logErrorToDB($errinfo['type'], $errinfo['file'], $errinfo['line'], $errinfo['message']);
-        restore_error_handler();
-        
-        // 백지현상이 발생하지 않도록 간단한 메시지를 출력한다.
-        include dirname(__FILE__) . '/tpl/error.html';
-    }
-    
-    /**
-     * 에러 번호를 에러 종류로 변환하는 메소드.
-     */
-    public static function getErrorType($errno)
-    {
-        switch ($errno)
-        {
-            case E_ERROR: return 'Fatal Error';
-            case E_WARNING: return 'Warning';
-            case E_NOTICE: return 'Notice';
-            case E_CORE_ERROR: return 'Core Error';
-            case E_CORE_WARNING: return 'Core Warning';
-            case E_COMPILE_ERROR: return 'Compile Error';
-            case E_COMPILE_WARNING: return 'Compile Warning';
-            case E_USER_ERROR: return 'User Error';
-            case E_USER_WARNING: return 'User Warning';
-            case E_USER_NOTICE: return 'User Notice';
-            case E_STRICT: return 'Strict Standards';
-            case E_PARSE: return 'Parse Error';
-            case E_DEPRECATED: return 'Deprecated';
-            case E_USER_DEPRECATED: return 'User Deprecated';
-            case E_RECOVERABLE_ERROR: return 'Catchable Fatal Error';
-            default: return 'Error';
-        }
-    }
+	public function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
+	{
+		// 기록할 필요가 없는 에러는 무시한다.
+		if (($errno & self::$config->error_types) == 0 || error_reporting() == 0)
+		{
+			return false;
+		}
+		
+		// 에러를 기록한다.
+		set_error_handler(array($this, 'dummyHandler'), ~0);
+		$this->logErrorToDB($errno, $errfile, $errline, $errstr);
+		restore_error_handler();
+		
+		// 기본 에러 핸들러의 작동을 방해하지 않도록 false를 반환한다.
+		return false;
+	}
+	
+	/**
+	 * 치명적인 오류로 실행이 종료되는 경우를 기록하는 메소드.
+	 */
+	public function shutdownHandler()
+	{
+		// 정상 종료되는 경우는 무시한다.
+		$errinfo = error_get_last();
+		if ($errinfo === null || ($errinfo['type'] != 1 && $errinfo['type'] != 4))
+		{
+			return false;
+		}
+		
+		// 에러를 기록한다.
+		set_error_handler(array($this, 'dummyHandler'), ~0);
+		$this->logErrorToDB($errinfo['type'], $errinfo['file'], $errinfo['line'], $errinfo['message']);
+		restore_error_handler();
+		
+		// 백지현상이 발생하지 않도록 간단한 메시지를 출력한다.
+		while (ob_get_level()) ob_end_clean();
+		if (Context::getInstance()->request_method === 'JSON')
+		{
+			echo json_encode(array(
+				'error' => -1,
+				'message' => 'Fatal Error: ' . $errinfo['message'],
+				'message_type' => '',
+			));
+		}
+		else
+		{
+			include dirname(__FILE__) . '/tpl/error.html';
+		}
+	}
+	
+	/**
+	 * 에러 번호를 에러 종류로 변환하는 메소드.
+	 */
+	public static function getErrorType($errno)
+	{
+		switch ($errno)
+		{
+			case E_ERROR: return 'Fatal Error';
+			case E_WARNING: return 'Warning';
+			case E_NOTICE: return 'Notice';
+			case E_CORE_ERROR: return 'Core Error';
+			case E_CORE_WARNING: return 'Core Warning';
+			case E_COMPILE_ERROR: return 'Compile Error';
+			case E_COMPILE_WARNING: return 'Compile Warning';
+			case E_USER_ERROR: return 'User Error';
+			case E_USER_WARNING: return 'User Warning';
+			case E_USER_NOTICE: return 'User Notice';
+			case E_STRICT: return 'Strict Standards';
+			case E_PARSE: return 'Parse Error';
+			case E_DEPRECATED: return 'Deprecated';
+			case E_USER_DEPRECATED: return 'User Deprecated';
+			case E_RECOVERABLE_ERROR: return 'Catchable Fatal Error';
+			default: return 'Error';
+		}
+	}
 }
